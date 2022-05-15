@@ -57,9 +57,37 @@ export default class Map extends React.Component {
     //TODO: add endpoint
 
     }
+
+    _startGame(){
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      var raw = JSON.stringify({
+        "action": "startgame",
+        "code": code,
+        "loc": {
+          "lat": 1,
+          "lng": -1
+        }
+      });
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("https://us-central1-aiot-fit-xlab.cloudfunctions.net/hacksparrow", requestOptions)
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
   
 
   componentDidMount() {
+
+    this._startGame();
     
             this.setState({
               trainer: {
@@ -92,10 +120,12 @@ export default class Map extends React.Component {
     this.setState({
       sprite: newsprite
     })
+    console.log(this.state.sprite)
   }
 
   render() {
     const { navigation, route } = this.props;
+    const { code } = route.params;
    const pick = 1;
     return (
       <View style={styles.container}>
@@ -123,7 +153,7 @@ export default class Map extends React.Component {
                 this.props.navigation.navigate('Cam',{ sprite: p, char: pick })
               }}
             >
-              <Image source={{uri:p.image}} />
+              <Image source={{uri:p.image}} style={{height:30, width:30, resizeMode:'contain'}}/>
             </MapView.Marker>
           )}
         </MapView>

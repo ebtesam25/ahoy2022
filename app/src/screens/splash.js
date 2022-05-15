@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Splash({navigation}) {
     const [name, setname] = useState('');
+    const [phone, setphone] = useState('');
     const [code, setcode] = useState('');
 
     const _getAllObjects = () => {
@@ -50,6 +51,17 @@ export default function Splash({navigation}) {
       theme={{colors: {text: '#FFF', placeholder:"#FFD700" }}}
       style={{width:'50%', alignSelf:'center', marginTop:'5%', backgroundColor:"#000"}}
       onChangeText={text => setname(text)}
+    />
+    <TextInput
+      label="Phone"
+      value={phone}
+      mode="outlined"
+      outlineColor="#FFD200"
+      activeOutlineColor="#FFD700"
+      placeholderTextColor="#FFF"
+      theme={{colors: {text: '#FFF', placeholder:"#FFD700" }}}
+      style={{width:'50%', alignSelf:'center', marginTop:'5%', backgroundColor:"#000"}}
+      onChangeText={text => setphone(text)}
     />
     <TextInput
       label="Game Code (optional)"

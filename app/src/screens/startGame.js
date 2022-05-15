@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button, ImageBackground} from 'react-native';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
@@ -12,14 +12,41 @@ import { ScrollView } from 'react-native';
 export default function StartGame({route, navigation}) {
 
     const {name, code} = route.params
-    const [players, setplayers] = useState(['Robot', 'Hack Sparrow'])
+    const [players, setplayers] = useState([name, 'Hack Sparrow'])
+    const [gcode, setgcode] = useState('')
 
     const _getAllPlayers = () => {
         //TODO: add endpoint
     }
     const _getGameCode = () => {
         //TODO: add endpoint
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+        "action": "creategame",
+        "name": name,
+        "phone": "+15714901702"
+        });
+
+        var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+        };
+
+        fetch("https://us-central1-aiot-fit-xlab.cloudfunctions.net/hacksparrow", requestOptions)
+        .then(response => response.json())
+        .then(result => {console.log(result);setgcode(result.invitecode)})
+        .catch(error => console.log('error', error));
     }
+    useEffect(() => {
+        if( code ==''){
+            _getGameCode();
+        }
+        
+    }, [])
   return(
  <View style={styles.container}>
       <KeyboardAwareScrollView>
@@ -36,7 +63,7 @@ export default function StartGame({route, navigation}) {
 
 
         <Text style={{color:"#FFF", fontWeight:'bold', fontSize:15, textAlign:'center', marginTop:'15%'}}>Share Game Code</Text>
-        <Text style={{color:"#FFD700", fontWeight:'bold', fontSize:20, marginBottom:'2.5%', textAlign:'center'}} selectable>{code}</Text>
+        <Text style={{color:"#FFD700", fontWeight:'bold', fontSize:20, marginBottom:'2.5%', textAlign:'center'}} selectable>{code==''?gcode:code}</Text>
 
         <Text style={{color:"#FFF", fontWeight:'bold', fontSize:20, marginBottom:'2.5%'}}>Players</Text>
 
@@ -46,7 +73,7 @@ export default function StartGame({route, navigation}) {
 
       
             
-      <Text style={{fontSize:20,margin:'auto', fontWeight:'bold', textAlign:'center', color:'#FFF', padding:'2.5%', width:'50%', borderWidth:2, borderColor:'#FFF', borderRadius:10, alignSelf:'center', marginTop:'15%'}} onPress={()=>{navigation.navigate('Map')}}>Start</Text>
+      <Text style={{fontSize:20,margin:'auto', fontWeight:'bold', textAlign:'center', color:'#FFF', padding:'2.5%', width:'50%', borderWidth:2, borderColor:'#FFF', borderRadius:10, alignSelf:'center', marginTop:'15%'}} onPress={()=>{navigation.navigate('Map',{code:code})}}>Start</Text>
       
       </KeyboardAwareScrollView>
     </View>

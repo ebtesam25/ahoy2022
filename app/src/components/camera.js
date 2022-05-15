@@ -133,7 +133,7 @@ export default class Cam extends React.Component {
     const spriteX = (width/2) + this.spritePosition.x
     const spriteY = (height/3) + this.spritePosition.y
 
-    return ((Math.abs((spritegoX - spriteX)) < 50) && (Math.abs((spritegoY - spriteY)) < 50))
+    return ((Math.abs((spritegoX - spriteX)) < 100) && (Math.abs((spritegoY - spriteY)) < 100))
   }
 
   render() {
@@ -156,12 +156,12 @@ export default class Cam extends React.Component {
         {this.state.captured ? (
           <View style={[styles.overlay, styles.captureOverlay]}>
             <Text style={styles.cancelText}>
-              Enemy Defeated! Nice job!
+              Good job!
             </Text>
           </View>
         ) : (
           <Animated.Image
-            source={require('../assets/logo-sm.png')}
+            source={{uri:sprite.image}}
             style={[styles.sprite, {
               transform: [
                 { translateX: this.animatedspritePosition.x },
@@ -182,7 +182,7 @@ export default class Cam extends React.Component {
 
         <View style={[styles.overlay, styles.bottomOverlay]}>
           <Animated.Image
-            source={{uri:charImage[char]}}
+            source={require('../assets/logo-sm.png')}
             style={{
               transform: [
                 { translateX: this.animatedspritego.x },
@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     top: height/3,
     bottom: height/3,
     right: width/3,
-    left: width/3
+    left: width/3,
+    resizeMode:'contain'
   },
 })
